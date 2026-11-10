@@ -1,0 +1,178 @@
+/* Hallmark · shape: Ledger (custom: a ruled ledger page, the statement in the hero, footnotes in the margin) · genre: modern-minimal · theme: brand (locked DESIGN.md, Ledger Rule) · redesign: full · job: try · hero: Banner · nav: edge-aligned, the wordmark left, one anchor, the demo link and RU EN right · footer: colophon, one line under a rule · imagery: the product's own data, no photographs · signature: the statement excerpt with the 1 000 000 ₸ threshold ruled through the amount column
+ * axes: dark/humanist-sans/violet-muted · posture: restrained · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S5 R5 V4 · weakest: H, section heads stay at 31px under the locked scale; the 61px head, the rules and the ruled statement carry the order */
+/* Hallmark · waive 39b · the primary control is 32px with a 44px target under coarse pointers · the locked DESIGN.md sets every Redstring button at --button-height */
+/* Hallmark · waive 72 · the 16px label sits in a 32px control, 7px above and below its line box · the locked DESIGN.md sets the Redstring button at --button-height with a 16px label */
+/* Hallmark · waive 78 · section heads render at 31px under the 61px hero head · the locked DESIGN.md scale keeps its large steps for the Redstring hero head alone */
+/* Hallmark · dropped #board, #dossier, #ring-path, #take-case, #top, app.html · the user retired the detective landing (dossier flip, cork board, stamp, sound, typing terminal); the demo moved to investigate.html */
+/* Hallmark · dropped https://cdn.jsdelivr.net/npm/lucide@0.460.0/dist/umd/lucide.min.js · Lucide icons now ship as an inline sprite, so no icon needs a script */
+/* Hallmark · dropped the scores 0.91, 0.88, 0.84, 0.71, 0.79 and the 12+ and 3% dossier lines · the locked DESIGN.md bans confidence scores; the basis is a word and a count, the apex a measured flow share */
+/* Hallmark · dropped the detective headings and their element ids · the whole detective landing was retired at the user's request */
+@import url("./tokens.css");
+@import url("./base.css");
+
+b, strong { font-weight: var(--weight-strong); }
+.muted { color: var(--text-secondary); }
+
+.container { width: 100%; max-width: 85rem; margin-inline: auto; padding-inline: var(--space-8); }
+
+/* ---------- Nav ---------- */
+.nav-row { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); min-height: var(--space-8); }
+.wordmark { color: var(--text); font-size: var(--text-lg); font-weight: var(--weight-strong); text-decoration: none; }
+.wordmark:hover { text-decoration: underline; text-decoration-thickness: 1px; }
+.wordmark:active { color: var(--accent-text); }
+.nav-end { display: flex; align-items: center; gap: var(--space-5); }
+.nav-links { display: flex; gap: var(--space-5); }
+.nav-links a {
+  display: inline-flex; align-items: center;
+  min-height: var(--button-height);
+  color: var(--text);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--duration-micro) var(--ease-sharp);
+}
+.nav-links a:hover { color: var(--accent-text); text-decoration: underline; }
+.nav-links a:active { color: var(--accent-text); }
+
+/* ---------- Primary action, the only filled control ---------- */
+.btn-primary {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: var(--button-height);
+  padding-inline: var(--space-4);
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  border: 1px solid var(--button-primary-border);
+  border-radius: var(--button-radius);
+  font-size: var(--text-base);
+  font-weight: var(--weight-strong);
+  line-height: var(--leading-tight);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: box-shadow var(--duration-micro) var(--ease-sharp);
+}
+.btn-primary:hover { box-shadow: inset 0 0 0 1px var(--button-primary-border); }
+.btn-primary:active { box-shadow: inset 0 0 0 2px var(--button-primary-border); }
+@media (pointer: coarse) { .btn-primary, .nav-links a { min-height: var(--button-height-touch); } }
+
+/* ---------- Hero: the statement with the threshold ruled through it ---------- */
+.hero { padding-block: var(--space-7); }
+.hero-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-6); align-items: center; }
+.hero-text { grid-column: 1 / span 5; display: grid; gap: var(--space-5); align-content: center; }
+.hero h1 { max-width: 14ch; font-size: var(--text-4xl); letter-spacing: -0.015em; }
+.lede { max-width: 30ch; color: var(--text-secondary); font-size: var(--text-lg); line-height: var(--leading-body); }
+.hero-action { display: grid; justify-items: start; gap: var(--space-2); margin-top: var(--space-2); }
+.action-note { color: var(--text-secondary); font-size: var(--text-sm); }
+
+.statement { grid-column: 6 / -1; min-width: 0; }
+.statement-table { width: 100%; background: var(--surface); font-size: var(--text-base); }
+.statement-table caption { caption-side: top; padding-bottom: var(--space-3); color: var(--text-secondary); font-size: var(--text-sm); text-align: start; }
+.statement-table th, .statement-table td { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--rule); white-space: nowrap; }
+.statement-table thead th { color: var(--text-secondary); font-size: var(--text-sm); border-bottom-color: var(--border-interactive); }
+.statement-table .amt-head { text-align: end; }
+.statement-table td.amt { padding: 0; }
+.amt-cell { display: grid; grid-template-columns: minmax(0, 1fr) auto; font-size: var(--text-lg); font-variant-numeric: tabular-nums lining-nums; }
+.amt-hi { padding: var(--space-3) var(--space-2) var(--space-3) var(--space-4); text-align: end; }
+.amt-lo { padding: var(--space-3) var(--space-4) var(--space-3) var(--space-2); border-left: 2px solid var(--rule-threshold); }
+.statement-table .is-out .amt-hi { font-weight: var(--weight-strong); }
+.threshold-row th { color: var(--text-secondary); font-size: var(--text-sm); font-weight: var(--weight-regular); }
+.threshold-row td, .threshold-row th { border-bottom: 0; border-top: 1px solid var(--border-interactive); }
+.threshold-row .amt-cell { color: var(--accent-text); }
+.notes { margin-top: var(--space-4); }
+.notes li { display: grid; grid-template-columns: var(--space-5) minmax(0, 1fr); gap: var(--space-2); color: var(--text-secondary); font-size: var(--text-sm); line-height: var(--leading-body); }
+.note-n { color: var(--footnote-marker-text); font-weight: var(--weight-strong); font-variant-numeric: tabular-nums lining-nums; text-decoration: none; }
+.note-n:hover { text-decoration: underline; }
+.note-n:active { color: var(--text); }
+.notes li:target { color: var(--text); }
+.statement figcaption { margin-top: var(--space-3); color: var(--text-secondary); font-size: var(--text-sm); }
+
+/* ---------- Sections ---------- */
+.section { border-top: 1px solid var(--rule); }
+.section-head h2 { max-width: 22ch; font-size: var(--text-2xl); }
+.section-lede { max-width: 40ch; margin-top: var(--space-3); color: var(--text-secondary); font-size: var(--text-lg); line-height: var(--leading-body); }
+
+/* How it works: the real run of the demo alert, stage by stage */
+.how { padding-block: var(--space-8); }
+.how-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-6); row-gap: var(--space-6); }
+.how .section-head { grid-column: 1 / span 4; }
+.run { grid-column: 5 / -1; border-bottom: 1px solid var(--rule); }
+.stage { display: grid; grid-template-columns: var(--space-5) 11.5rem minmax(0, 1fr); column-gap: var(--space-4); align-items: baseline; padding-block: var(--space-4); border-top: 1px solid var(--rule); }
+.stage:first-child { border-top-color: var(--border-interactive); }
+.stage-name { font-size: var(--text-base); line-height: var(--leading-body); }
+.stage-n { color: var(--text-secondary); }
+.calls { display: grid; gap: var(--space-2); }
+.calls li { display: grid; grid-template-columns: 11rem minmax(0, 1fr) auto; column-gap: var(--space-4); align-items: baseline; }
+.call-tool { color: var(--text); font-weight: var(--weight-id-strong); }
+.call-result { line-height: var(--leading-body); }
+.call-time { color: var(--text-secondary); font-size: var(--text-sm); text-align: end; white-space: nowrap; }
+
+/* Evidence: one hypothesis, its footnotes in the margin beside it */
+.evidence { padding-block: var(--space-9); }
+.exhibit {
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-6); row-gap: var(--space-5);
+  margin-top: var(--space-7);
+  padding-block: var(--space-5);
+  border-block: 1px solid var(--border-interactive);
+}
+.exhibit-main { grid-column: 1 / span 7; display: grid; align-content: start; gap: var(--space-3); }
+.exhibit-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-4); }
+.exhibit h3 { font-size: var(--text-lg); }
+.basis, .check { line-height: var(--leading-body); }
+.claim { max-width: 46ch; font-size: var(--text-lg); line-height: var(--leading-body); }
+.margin { grid-column: 9 / -1; min-width: 0; }
+.fn-table { width: 100%; font-size: var(--text-sm); }
+.fn-table th, .fn-table td { padding: var(--space-2) var(--space-1); border-bottom: 1px solid var(--rule); text-align: start; white-space: nowrap; }
+.fn-table thead th { color: var(--text-secondary); font-size: var(--text-xs); font-weight: var(--weight-regular); }
+.fn-table .amt { text-align: end; }
+.fn-table .fn-n { width: 1.75rem; color: var(--footnote-marker-text); font-weight: var(--weight-strong); }
+.fn-table thead .fn-n { color: var(--text-secondary); font-weight: var(--weight-regular); }
+.fn-table tbody { transition: background-color var(--duration-micro) var(--ease-sharp); }
+.fn-table tbody:target,
+.exhibit:has(a[href="#ev-fn-1"]:is(:hover, :focus-visible)) #ev-fn-1,
+.exhibit:has(a[href="#ev-fn-2"]:is(:hover, :focus-visible)) #ev-fn-2,
+.exhibit:has(a[href="#ev-fn-3"]:is(:hover, :focus-visible)) #ev-fn-3 { background: var(--row-selected-bg); }
+.exhibit-note { margin-top: var(--space-3); color: var(--text-secondary); font-size: var(--text-sm); }
+
+/* Limits: four terms across, each under its own rule */
+.limits { padding-block: var(--space-9); }
+.terms { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--space-6); row-gap: var(--space-6); margin-top: var(--space-7); }
+.term { display: grid; align-content: start; gap: var(--space-2); padding-top: var(--space-4); border-top: 2px solid var(--border-interactive); }
+.term dt { font-size: var(--text-lg); font-weight: var(--weight-strong); line-height: var(--leading-tight); }
+.term dd { color: var(--text-secondary); line-height: var(--leading-body); }
+
+/* Closing band: a change of paper, the one action again */
+.band { padding-block: var(--space-8); background: var(--surface); color: var(--text); border-top: 1px solid var(--rule); }
+.band-row { display: flex; justify-content: space-between; align-items: center; gap: var(--space-5); flex-wrap: wrap; }
+.band h2 { font-size: var(--text-2xl); }
+.band p { margin-top: var(--space-2); color: var(--text-secondary); font-size: var(--text-lg); }
+
+.footer { padding-block: var(--space-5); border-top: 1px solid var(--rule); color: var(--text-secondary); font-size: var(--text-sm); }
+.footer-row { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
+
+/* ---------- Narrower screens ---------- */
+@media (max-width: 75rem) {
+  .container { padding-inline: var(--space-6); }
+  .stage { grid-template-columns: var(--space-5) minmax(0, 1fr); row-gap: var(--space-2); }
+  .stage .calls { grid-column: 2; }
+}
+@media (max-width: 60rem) {
+  .hero-grid, .how-grid, .exhibit { display: block; }
+  .hero-text { margin-bottom: var(--space-7); }
+  .run { margin-top: var(--space-6); }
+  .margin { margin-top: var(--space-5); }
+  .terms { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nav-links a[href="#how"] { display: none; }
+}
+@media (max-width: 40rem) {
+  .container { padding-inline: var(--space-4); }
+  .nav-links { display: none; }
+  .hero { padding-block: var(--space-6) var(--space-8); }
+  .statement-table th, .statement-table td { padding-inline: var(--space-2); }
+  .amt-hi { padding-inline: var(--space-2) var(--space-1); }
+  .amt-lo { padding-inline: var(--space-1) var(--space-2); }
+  .amt-cell { font-size: var(--text-base); }
+  .calls li { grid-template-columns: minmax(0, 1fr) auto; }
+  .call-result { grid-column: 1 / -1; grid-row: 2; }
+  .terms { grid-template-columns: 1fr; }
+  .exhibit-head { flex-wrap: wrap; }
+}

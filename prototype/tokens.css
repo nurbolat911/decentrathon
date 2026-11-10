@@ -1,0 +1,158 @@
+/* Ledger Rule tokens, copied from the locked DESIGN.md (## Color tokens, dark ramp; ## Token tiers).
+   Change DESIGN.md first; never edit a value here by hand. The light ramp is not used and is left out. */
+
+/* === Tier 1: scales === */
+:root {
+  --font-sans: "Source Sans 3", system-ui, "Segoe UI", sans-serif;
+  --font-id: "Source Code Pro", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5625rem;
+  --text-2xl: 1.9375rem;
+  --text-3xl: 2.4375rem;
+  --text-4xl: clamp(2.4375rem, 1.6rem + 3.4vw, 3.8125rem);
+  --leading-tight: 1.1;
+  --leading-row: 1.3;
+  --leading-body: 1.4;
+  --weight-regular: 400;
+  --weight-strong: 600;
+  --weight-id-strong: 500;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem; --space-5: 1.5rem;
+  --space-6: 2rem; --space-7: 3rem; --space-8: 4rem; --space-9: 6rem;
+  --radius-none: 0; --radius-sm: 2px; --radius-md: 4px;
+  --duration-micro: 100ms; --duration-standard: 150ms;
+  --ease-sharp: cubic-bezier(0.2, 0, 0, 1);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  /* Neutrals and accent: palette.mjs --seed 286 --chroma muted --harmony mono */
+  --neutral-1: #131313;
+  --neutral-2: #19191a;
+  --neutral-3: #222224;
+  --neutral-4: #2a2a2d;
+  --neutral-5: #323236;
+  --neutral-6: #3b3b41;
+  --neutral-7: #484850;
+  --neutral-8: #5f5f69;
+  --neutral-9: #656570;
+  --neutral-10: #767681;
+  --neutral-11: #b6b6be;
+  --neutral-12: #e7e7ec;
+  --accent-1: #121216;
+  --accent-2: #19191f;
+  --accent-3: #21202f;
+  --accent-4: #28273e;
+  --accent-5: #302e4e;
+  --accent-6: #393560;
+  --accent-7: #464076;
+  --accent-8: #5c569a;
+  --accent-9: #6158ac;
+  --accent-10: #726abd;
+  --accent-11: #b2b1e8;
+  --accent-12: #e5e5ff;
+  --accent-on-solid: #f9f9ff;
+  --background: var(--neutral-1);
+  --surface: var(--neutral-2);
+  --surface-hover: var(--neutral-3);
+  --surface-active: var(--neutral-4);
+  --border-subtle: var(--neutral-6);
+  --border: var(--neutral-7);
+  --border-strong: var(--neutral-8);
+  --text-secondary: var(--neutral-11);
+  --text: var(--neutral-12);
+  --accent-bg-subtle: var(--accent-3);
+  --accent-solid: var(--accent-9);
+  --accent-solid-hover: var(--accent-10);
+  --accent-text: var(--accent-11);
+
+  /* Functional colours: palette.mjs --seed 286 --chroma balanced, verbatim */
+  --error-3: #331a18;
+  --error-9: #e1524f;
+  --error-11: #f49c95;
+  --success-3: #152715;
+  --success-9: #5ad664;
+  --success-11: #88cb8a;
+  --warning-3: #282113;
+  --warning-9: #dbb155;
+  --warning-11: #cdb482;
+  --info-3: #17242d;
+  --info-9: #5baee5;
+  --info-11: #90bedf;
+
+  /* === Tier 2: aliases === */
+  --surface-raised: var(--neutral-3);
+  --rule: var(--neutral-6);
+  --border-interactive: var(--neutral-10);
+  --edge: var(--neutral-9);
+  --focus-ring: var(--accent-11);
+  --text-disabled: var(--neutral-10);
+  --on-fill: var(--neutral-1);
+  --on-accent: var(--accent-on-solid);
+  --selection-bg: var(--accent-3);
+  --risk-high-text: var(--error-11);
+  --risk-high-mark: var(--error-9);
+  --risk-high-bg: var(--error-3);
+  --risk-medium-text: var(--warning-11);
+  --risk-medium-mark: var(--warning-9);
+  --risk-medium-bg: var(--warning-3);
+  --risk-low-text: var(--text-secondary);
+  --risk-low-mark: var(--border-interactive);
+  --status-ok-text: var(--success-11);
+  --status-ok-mark: var(--success-9);
+  --status-info-text: var(--info-11);
+  --status-error-text: var(--error-11);
+  --status-error-mark: var(--error-9);
+  --shadow-overlay: inset 0 1px 0 color-mix(in srgb, var(--neutral-12) 6%, transparent);
+
+  /* === Tier 3: components === */
+  --button-primary-bg: var(--accent-solid);
+  --button-primary-text: var(--on-accent);
+  --button-primary-border: var(--accent-text);
+  --button-secondary-text: var(--text);
+  --button-secondary-border: var(--border-interactive);
+  --button-disabled-border: var(--rule);
+  --button-height: var(--space-6);
+  --button-height-touch: 2.75rem;
+  --button-radius: var(--radius-sm);
+  --row-height: var(--space-6);
+  --row-height-touch: 2.75rem;
+  --row-rule: var(--rule);
+  --row-hover-bg: var(--surface-hover);
+  --row-selected-bg: var(--selection-bg);
+  --row-selected-rule: var(--border-interactive);
+  --footnote-marker-text: var(--accent-text);
+  --footnote-marker-size: var(--text-xs);
+  --footnote-marker-hit: var(--space-5);
+  --footnote-id-font: var(--font-id);
+  --rule-threshold: var(--accent-text);
+  --rule-apex: var(--border-interactive);
+  --rule-closing: var(--border-interactive);
+  --graph-bg: var(--background);
+  --graph-node-fill: var(--surface-raised);
+  --graph-node-stroke: var(--border-interactive);
+  --graph-node-stroke-high: var(--risk-high-mark);
+  --graph-node-stroke-medium: var(--risk-medium-mark);
+  --graph-edge: var(--edge);
+  --graph-edge-selected: var(--accent-text);
+  --graph-label: var(--text-secondary);
+  --graph-node-selected-ring: var(--accent-text);
+  --graph-node-selected-ring-width: 3px;
+  --graph-node-selected-ring-offset: 4px;
+  --graph-dim-opacity: 0.4;
+  --graph-label-size: 0.8125rem;
+  --graph-stroke-high: 4px;
+  --graph-stroke-medium: 2px;
+  --graph-stroke-low: 1px;
+  --graph-node-size-context: 14;
+  --graph-node-size: 24;
+  --graph-node-size-apex: 36;
+  --graph-hit-min: 1.5rem;
+  --graph-zoom-min: 0.75;
+  --graph-zoom-max: 3;
+  --column-left-width: 20rem;
+  --column-right-width: 23.75rem;
+  --panel-width: 17.5rem;
+}

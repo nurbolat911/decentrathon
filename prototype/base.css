@@ -1,0 +1,80 @@
+/* Base rules both screens share: the Floor's decisions on the project's own token names. */
+/* The outlier face is the id face: Source Code Pro for account and transaction ids and code, nothing else. */
+:root { --font-outlier: var(--font-id); }
+*, *::before, *::after { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+html { scrollbar-color: var(--border-interactive) var(--background); scroll-padding-top: var(--space-8); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-body);
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  caret-color: var(--accent-text);
+}
+::selection { background: var(--selection-bg); color: var(--text); }
+:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+a { color: var(--accent-text); text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+h1, h2, h3 { margin: 0; font-weight: var(--weight-strong); line-height: var(--leading-tight); overflow-wrap: break-word; min-width: 0; text-wrap: balance; }
+p, ol, ul, dl, dd, figure { margin: 0; }
+ol, ul { padding: 0; list-style: none; }
+p { text-wrap: pretty; }
+table { border-collapse: collapse; }
+th { font-weight: var(--weight-strong); text-align: start; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+[hidden] { display: none !important; }
+.icon { display: inline-block; width: 1rem; height: 1rem; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -0.15em; }
+.num { font-variant-numeric: tabular-nums lining-nums; }
+.id { font-family: var(--font-id); font-size: var(--text-xs); font-weight: var(--weight-regular); white-space: nowrap; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.skip { position: absolute; left: var(--space-4); top: var(--space-2); z-index: 600; padding: var(--space-2) var(--space-3); background: var(--surface-raised); color: var(--text); border: 1px solid var(--border-interactive); border-radius: var(--radius-sm); transform: translateY(-200%); }
+.skip:focus-visible { transform: none; }
+
+/* Language switch: two links, a rule under the current one; plain links, so it works without script. */
+.lang { display: flex; gap: var(--space-1); }
+.lang a {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: var(--button-height); min-height: var(--button-height);
+  padding-inline: var(--space-2);
+  color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm);
+  border-bottom: 2px solid transparent;
+  transition: color var(--duration-micro) var(--ease-sharp), border-color var(--duration-micro) var(--ease-sharp);
+}
+.lang a:hover { color: var(--text); }
+.lang a:active { color: var(--accent-text); }
+.lang a[aria-current="page"], .lang a[aria-current="true"] { color: var(--text); border-bottom-color: var(--accent-text); }
+
+/* Risk label: icon and word, never the colour alone. */
+.risk { display: inline-flex; align-items: center; gap: var(--space-1); min-width: 5.3rem; font-size: var(--text-sm); white-space: nowrap; }
+.risk-high { color: var(--risk-high-text); }
+.risk-high .icon { color: var(--risk-high-mark); }
+.risk-medium { color: var(--risk-medium-text); }
+.risk-medium .icon { color: var(--risk-medium-mark); }
+.risk-low { color: var(--risk-low-text); }
+.risk-low .icon { color: var(--risk-low-mark); }
+
+/* Footnote marker: a real link, a small figure with a 24 px hit area. */
+sup { line-height: 0; vertical-align: super; font-size: var(--footnote-marker-size); }
+.fn-mark {
+  position: relative;
+  color: var(--footnote-marker-text);
+  font-size: var(--footnote-marker-size);
+  font-weight: var(--weight-strong);
+  font-variant-numeric: tabular-nums lining-nums;
+  text-decoration: none;
+  padding-inline: var(--space-1);
+  border-radius: var(--radius-sm);
+}
+.fn-mark::after { content: ""; position: absolute; left: 50%; top: 50%; width: var(--footnote-marker-hit); height: var(--footnote-marker-hit); margin: calc(var(--footnote-marker-hit) / -2) 0 0 calc(var(--footnote-marker-hit) / -2); }
+.fn-mark:hover { text-decoration: underline; }
+.fn-mark:active { color: var(--text); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Redstring, помощник AML-аналитика</title>
+  <meta name="description" content="Redstring строит граф переводов, ищет схемы отмывания алгоритмами и под каждым выводом показывает переводы. Демо на синтетических данных." />
+  <link rel="alternate" hreflang="en" href="en.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500&amp;family=Source+Sans+3:wght@400;600&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="landing.css" />
+</head>
+<body>
+  <svg class="visually-hidden" aria-hidden="true" focusable="false">
+    <symbol id="i-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /><path d="M12 9v4" /><path d="M12 17h.01" /></symbol>
+  </svg>
+
+  <a class="skip" href="#main">Перейти к содержимому</a>
+
+  <header class="nav">
+    <div class="container nav-row">
+      <a class="wordmark" href="index.html" aria-label="Redstring, главная">Redstring</a>
+      <div class="nav-end">
+        <nav class="nav-links" aria-label="Разделы">
+          <a href="#how">Как это работает</a>
+          <a href="investigate.html?lang=ru">Начать расследование</a>
+        </nav>
+        <nav class="lang" aria-label="Язык">
+          <a href="index.html" hreflang="ru" lang="ru" aria-current="page">RU</a>
+          <a href="en.html" hreflang="en" lang="en">EN</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-text">
+          <h1 id="hero-title">Ручной разбор одного алерта занимает часы</h1>
+          <p class="lede">Redstring строит граф переводов и под каждым выводом показывает транзакции.</p>
+          <div class="hero-action">
+            <a class="btn-primary" href="investigate.html?lang=ru">Начать расследование</a>
+            <p class="action-note">Без регистрации, данные синтетические.</p>
+          </div>
+        </div>
+
+        <figure class="statement" aria-labelledby="statement-caption">
+          <table class="statement-table">
+            <caption id="statement-caption">Выписка по счёту <span class="id">ACC-3301</span> за 20 октября 2026</caption>
+            <thead>
+              <tr><th scope="col">Время</th><th scope="col">Перевод</th><th scope="col">Контрагент</th><th scope="col" class="amt-head">Сумма, ₸</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="num">10:02</td><td><span class="id">T-0001</span></td><td><span class="id">ACC-2101</span></td><td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi"></span><span class="amt-lo">985 000</span></span><span class="visually-hidden">985 000</span></td></tr>
+              <tr><td class="num">11:17</td><td><span class="id">T-0003</span></td><td><span class="id">ACC-2102</span></td><td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi"></span><span class="amt-lo">975 000</span></span><span class="visually-hidden">975 000</span></td></tr>
+              <tr><td class="num">15:41</td><td><span class="id">T-0002</span></td><td><span class="id">ACC-2101</span></td><td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi"></span><span class="amt-lo">960 000</span></span><span class="visually-hidden">960 000</span></td></tr>
+              <tr><td class="num">18:30</td><td><span class="id">T-0012</span></td><td><span class="id">ACC-2106</span></td><td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi"></span><span class="amt-lo">975 000</span></span><span class="visually-hidden">975 000</span></td></tr>
+              <tr class="is-out"><td class="num">21:05</td><td><span class="id">T-0013</span></td><td><span class="id">ACC-1042</span></td><td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi">−3</span><span class="amt-lo">780 000</span></span><span class="visually-hidden">минус 3 780 000</span></td></tr>
+            </tbody>
+            <tfoot>
+              <tr class="threshold-row">
+                <th scope="row" colspan="3">Порог правила R-12<sup><a class="fn-mark" id="hero-ref-1" href="#hero-fn-1" aria-label="Сноска 1">1</a></sup></th>
+                <td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi">1</span><span class="amt-lo">000 000</span></span><span class="visually-hidden">1 000 000</span></td>
+              </tr>
+            </tfoot>
+          </table>
+          <ol class="notes">
+            <li id="hero-fn-1"><a class="note-n" href="#hero-ref-1" aria-label="К сноске 1 в выписке">1</a><p>Каждый приход ниже порога, вместе 3 895 000 ₸. В 21:05 счёт переводит 3 780 000 ₸ (<span class="id">T-0013</span>) на <span class="id">ACC-1042</span>, это 97 % полученного.</p></li>
+          </ol>
+          <figcaption>Фрагмент синтетической выписки из демо-кейса.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section how" id="how" aria-labelledby="how-title">
+      <div class="container how-grid">
+        <div class="section-head">
+          <h2 id="how-title">Как это работает</h2>
+          <p class="section-lede">Схемы находят алгоритмы, модель вызывает их по очереди и объясняет. Каждый шаг виден.</p>
+        </div>
+        <ol class="run" aria-label="Ход агента на демо-алерте ALR-2026-0417">
+          <li class="stage">
+            <span class="stage-n num" aria-hidden="true">1</span><h3 class="stage-name">Алерт</h3>
+            <ul class="calls">
+              <li><span class="id call-tool">get_alert</span><span class="call-result">Правило R-12, субъект <span class="id">ACC-1042</span>, сумма 11 630 000 ₸</span><span class="call-time num">120 мс</span></li>
+              <li><span class="id call-tool">account_profile</span><span class="call-result">ТОО, счёт открыт 47 дней назад</span><span class="call-time num">340 мс</span></li>
+            </ul>
+          </li>
+          <li class="stage">
+            <span class="stage-n num" aria-hidden="true">2</span><h3 class="stage-name">Граф</h3>
+            <ul class="calls">
+              <li><span class="id call-tool">neighborhood</span><span class="call-result">18 счетов, 25 переводов</span><span class="call-time num">610 мс</span></li>
+            </ul>
+          </li>
+          <li class="stage">
+            <span class="stage-n num" aria-hidden="true">3</span><h3 class="stage-name">Гипотезы с доказательствами</h3>
+            <ul class="calls">
+              <li><span class="id call-tool">detect_structuring</span><span class="call-result">12 переводов ниже порога</span><span class="call-time num">880 мс</span></li>
+              <li><span class="id call-tool">detect_funnels</span><span class="call-result">3 дроп-счета</span><span class="call-time num">920 мс</span></li>
+              <li><span class="id call-tool">find_cycles</span><span class="call-result">1 цикл длиной 4</span><span class="call-time num">1,5 с</span></li>
+            </ul>
+          </li>
+          <li class="stage">
+            <span class="stage-n num" aria-hidden="true">4</span><h3 class="stage-name">Вершина схемы</h3>
+            <ul class="calls">
+              <li><span class="id call-tool">rank_apex</span><span class="call-result">Лидер <span class="id">ACC-9001</span></span><span class="call-time num">760 мс</span></li>
+              <li><span class="id call-tool">compose_hypotheses</span><span class="call-result">4 гипотезы, у каждой есть ссылки на переводы</span><span class="call-time num">9,1 с</span></li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section evidence" id="evidence" aria-labelledby="evidence-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="evidence-title">Доказательства</h2>
+          <p class="section-lede">У каждого утверждения есть сноска с переводом, на котором оно держится. Без неё утверждение не показывается.</p>
+        </div>
+        <article class="exhibit" aria-labelledby="exhibit-title">
+          <div class="exhibit-main">
+            <div class="exhibit-head">
+              <h3 id="exhibit-title">Дроп-счета (воронка)</h3>
+              <span class="risk risk-high"><svg class="icon" aria-hidden="true"><use href="#i-triangle-alert" /></svg>Высокий</span>
+            </div>
+            <p class="basis"><span class="muted">Основание:</span> <strong>Сильное</strong>, 3 из 3 признаков</p>
+            <p class="claim"><span class="id">ACC-3301</span><sup><a class="fn-mark" href="#ev-fn-1" aria-label="Сноска 1">1</a></sup>, <span class="id">ACC-3302</span><sup><a class="fn-mark" href="#ev-fn-2" aria-label="Сноска 2">2</a></sup> и <span class="id">ACC-3303</span><sup><a class="fn-mark" href="#ev-fn-3" aria-label="Сноска 3">3</a></sup> получают по четыре перевода от трёх отправителей и в тот же вечер переводят 97 % полученного на <span class="id">ACC-1042</span>.</p>
+            <p class="check"><span class="muted">Проверить вручную:</span> снятие наличных и входы в онлайн-банк по этим счетам, данных нет.</p>
+          </div>
+          <aside class="margin" aria-label="Сноски к гипотезе H2">
+            <table class="fn-table">
+              <thead><tr><th scope="col" class="fn-n">№</th><th scope="col">Перевод</th><th scope="col" class="amt">Сумма</th><th scope="col">Откуда</th><th scope="col">Куда</th></tr></thead>
+              <tbody id="ev-fn-1"><tr><th scope="row" class="fn-n">1</th><td><span class="id">T-0013</span></td><td class="amt num">3 780 000 ₸</td><td><span class="id">ACC-3301</span></td><td><span class="id">ACC-1042</span></td></tr></tbody>
+              <tbody id="ev-fn-2"><tr><th scope="row" class="fn-n">2</th><td><span class="id">T-0014</span></td><td class="amt num">3 770 000 ₸</td><td><span class="id">ACC-3302</span></td><td><span class="id">ACC-1042</span></td></tr></tbody>
+              <tbody id="ev-fn-3"><tr><th scope="row" class="fn-n">3</th><td><span class="id">T-0015</span></td><td class="amt num">3 735 000 ₸</td><td><span class="id">ACC-3303</span></td><td><span class="id">ACC-1042</span></td></tr></tbody>
+            </table>
+          </aside>
+        </article>
+        <p class="exhibit-note">Синтетический пример: гипотеза <span class="id">H2</span> из демо-кейса.</p>
+      </div>
+    </section>
+
+    <section class="section limits" id="limits" aria-labelledby="limits-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="limits-title">Границы</h2>
+          <p class="section-lede">Агент предлагает гипотезы, решение принимает аналитик.</p>
+        </div>
+        <dl class="terms">
+          <div class="term"><dt>Решение за аналитиком</dt><dd>Аналитик принимает или отклоняет каждую гипотезу и может пересмотреть решение.</dd></div>
+          <div class="term"><dt>Чего агент не делает</dt><dd>Не судит о клиентах, не отправляет отчёты, не закрывает алерты и не меняет данные.</dd></div>
+          <div class="term"><dt>Данные демо</dt><dd>Счета и переводы из генератора, персональных данных нет.</dd></div>
+          <div class="term"><dt>Данные банка</dt><dd>Порядок работы с ними пока не определён.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="band" aria-labelledby="band-title">
+      <div class="container band-row">
+        <div class="band-text">
+          <h2 id="band-title">Разберите демо-алерт сами</h2>
+          <p>Граф, ход агента и гипотезы со сносками, без регистрации.</p>
+        </div>
+        <a class="btn-primary" href="investigate.html?lang=ru">Начать расследование</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <p>Redstring, рабочее название.</p>
+      <nav class="lang" aria-label="Язык">
+        <a href="index.html" hreflang="ru" lang="ru" aria-current="page">RU</a>
+        <a href="en.html" hreflang="en" lang="en">EN</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="landing.js"></script>
+</body>
+</html>

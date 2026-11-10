@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Redstring, an assistant for AML analysts</title>
+  <meta name="description" content="Redstring maps the transfers, finds laundering schemes with algorithms and puts the transactions under every finding. The demo runs on synthetic data." />
+  <link rel="alternate" hreflang="ru" href="index.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500&amp;family=Source+Sans+3:wght@400;600&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="landing.css" />
+</head>
+<body>
+  <svg class="visually-hidden" aria-hidden="true" focusable="false">
+    <symbol id="i-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /><path d="M12 9v4" /><path d="M12 17h.01" /></symbol>
+  </svg>
+
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav">
+    <div class="container nav-row">
+      <a class="wordmark" href="en.html" aria-label="Redstring, home">Redstring</a>
+      <div class="nav-end">
+        <nav class="nav-links" aria-label="Sections">
+          <a href="#how">How it works</a>
+          <a href="investigate.html?lang=en">Start investigation</a>
+        </nav>
+        <nav class="lang" aria-label="Language">
+          <a href="index.html" hreflang="ru" lang="ru">RU</a>
+          <a href="en.html" hreflang="en" lang="en" aria-current="page">EN</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-text">
+          <h1 id="hero-title">Tracing one alert by hand takes hours</h1>
+          <p class="lede">Redstring maps the transfers and puts the transactions under every finding.</p>
+          <div class="hero-action">
+            <a class="btn-primary" href="investigate.html?lang=en">Start investigation</a>
+            <p class="action-note">No sign-up. The data is synthetic.</p>
+          </div>
+        </div>
+
+        <figure class="statement" aria-labelledby="statement-caption">
+          <table class="statement-table">
+            <caption id="statement-caption">Statement for <span class="id">ACC-3301</span>, 20 October 2026</caption>
+            <thead>
+              <tr><th scope="col">Time</th><th scope="col">Transfer</th><th scope="col">Counterparty</th><th scope="col" class="amt-head">Amount, ₸</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="num">10:02</td><td><span class="id">T-0001</span></td><td><span class="id">ACC-2101</span></td><td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi"></span><span class="amt-lo">985,000</span></span><span class="visually-hidden">985,000</span></td></tr>
+              <tr><td class="num">11:17</td><td><span class="id">T-0003</span></td><td><span class="id">ACC-2102</span></td><td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi"></span><span class="amt-lo">975,000</span></span><span class="visually-hidden">975,000</span></td></tr>
+              <tr><td class="num">15:41</td><td><span class="id">T-0002</span></td><td><span class="id">ACC-2101</span></td><td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi"></span><span class="amt-lo">960,000</span></span><span class="visually-hidden">960,000</span></td></tr>
+              <tr><td class="num">18:30</td><td><span class="id">T-0012</span></td><td><span class="id">ACC-2106</span></td><td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi"></span><span class="amt-lo">975,000</span></span><span class="visually-hidden">975,000</span></td></tr>
+              <tr class="is-out"><td class="num">21:05</td><td><span class="id">T-0013</span></td><td><span class="id">ACC-1042</span></td><td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi">−3,</span><span class="amt-lo">780,000</span></span><span class="visually-hidden">minus 3,780,000</span></td></tr>
+            </tbody>
+            <tfoot>
+              <tr class="threshold-row">
+                <th scope="row" colspan="3">Rule R-12 threshold<sup><a class="fn-mark" id="hero-ref-1" href="#hero-fn-1" aria-label="Footnote 1">1</a></sup></th>
+                <td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi">1,</span><span class="amt-lo">000,000</span></span><span class="visually-hidden">1,000,000</span></td>
+              </tr>
+            </tfoot>
+          </table>
+          <ol class="notes">
+            <li id="hero-fn-1"><a class="note-n" href="#hero-ref-1" aria-label="Back to footnote 1 in the statement">1</a><p>Every credit sits below the threshold, 3,895,000 ₸ together. At 21:05 the account sends 3,780,000 ₸ (<span class="id">T-0013</span>) to <span class="id">ACC-1042</span>, 97% of what came in.</p></li>
+          </ol>
+          <figcaption>An excerpt of a synthetic statement from the demo case.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section how" id="how" aria-labelledby="how-title">
+      <div class="container how-grid">
+        <div class="section-head">
+          <h2 id="how-title">How it works</h2>
+          <p class="section-lede">Algorithms find the schemes; the model calls them in turn and explains. Every step shows.</p>
+        </div>
+        <ol class="run" aria-label="The agent run on demo alert ALR-2026-0417">
+          <li class="stage">
+            <span class="stage-n num" aria-hidden="true">1</span><h3 class="stage-name">Alert</h3>
+            <ul class="calls">
+              <li><span class="id call-tool">get_alert</span><span class="call-result">Rule R-12, subject <span class="id">ACC-1042</span>, 11,630,000 ₸</span><span class="call-time num">120 ms</span></li>
+              <li><span class="id call-tool">account_profile</span><span class="call-result">LLP, opened 47 days ago</span><span class="call-time num">340 ms</span></li>
+            </ul>
+          </li>
+          <li class="stage">
+            <span class="stage-n num" aria-hidden="true">2</span><h3 class="stage-name">Graph</h3>
+            <ul class="calls">
+              <li><span class="id call-tool">neighborhood</span><span class="call-result">18 accounts, 25 transfers</span><span class="call-time num">610 ms</span></li>
+            </ul>
+          </li>
+          <li class="stage">
+            <span class="stage-n num" aria-hidden="true">3</span><h3 class="stage-name">Hypotheses with evidence</h3>
+            <ul class="calls">
+              <li><span class="id call-tool">detect_structuring</span><span class="call-result">12 transfers below the threshold</span><span class="call-time num">880 ms</span></li>
+              <li><span class="id call-tool">detect_funnels</span><span class="call-result">3 drop accounts</span><span class="call-time num">920 ms</span></li>
+              <li><span class="id call-tool">find_cycles</span><span class="call-result">1 loop of length 4</span><span class="call-time num">1.5 s</span></li>
+            </ul>
+          </li>
+          <li class="stage">
+            <span class="stage-n num" aria-hidden="true">4</span><h3 class="stage-name">Scheme apex</h3>
+            <ul class="calls">
+              <li><span class="id call-tool">rank_apex</span><span class="call-result">Leader <span class="id">ACC-9001</span></span><span class="call-time num">760 ms</span></li>
+              <li><span class="id call-tool">compose_hypotheses</span><span class="call-result">4 hypotheses, each cites its transfers</span><span class="call-time num">9.1 s</span></li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section evidence" id="evidence" aria-labelledby="evidence-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="evidence-title">Evidence</h2>
+          <p class="section-lede">Each claim carries a footnote with the transfer behind it. A claim without one is never shown.</p>
+        </div>
+        <article class="exhibit" aria-labelledby="exhibit-title">
+          <div class="exhibit-main">
+            <div class="exhibit-head">
+              <h3 id="exhibit-title">Drop accounts (funnel)</h3>
+              <span class="risk risk-high"><svg class="icon" aria-hidden="true"><use href="#i-triangle-alert" /></svg>High</span>
+            </div>
+            <p class="basis"><span class="muted">Basis:</span> <strong>Strong</strong>, 3 of 3 signs</p>
+            <p class="claim"><span class="id">ACC-3301</span><sup><a class="fn-mark" href="#ev-fn-1" aria-label="Footnote 1">1</a></sup>, <span class="id">ACC-3302</span><sup><a class="fn-mark" href="#ev-fn-2" aria-label="Footnote 2">2</a></sup> and <span class="id">ACC-3303</span><sup><a class="fn-mark" href="#ev-fn-3" aria-label="Footnote 3">3</a></sup> each take four transfers from three senders and pass 97% of it to <span class="id">ACC-1042</span> the same evening.</p>
+            <p class="check"><span class="muted">Check by hand:</span> cash withdrawals and online-banking logins, no data yet.</p>
+          </div>
+          <aside class="margin" aria-label="Footnotes to hypothesis H2">
+            <table class="fn-table">
+              <thead><tr><th scope="col" class="fn-n">#</th><th scope="col">Transfer</th><th scope="col" class="amt">Amount</th><th scope="col">From</th><th scope="col">To</th></tr></thead>
+              <tbody id="ev-fn-1"><tr><th scope="row" class="fn-n">1</th><td><span class="id">T-0013</span></td><td class="amt num">3,780,000 ₸</td><td><span class="id">ACC-3301</span></td><td><span class="id">ACC-1042</span></td></tr></tbody>
+              <tbody id="ev-fn-2"><tr><th scope="row" class="fn-n">2</th><td><span class="id">T-0014</span></td><td class="amt num">3,770,000 ₸</td><td><span class="id">ACC-3302</span></td><td><span class="id">ACC-1042</span></td></tr></tbody>
+              <tbody id="ev-fn-3"><tr><th scope="row" class="fn-n">3</th><td><span class="id">T-0015</span></td><td class="amt num">3,735,000 ₸</td><td><span class="id">ACC-3303</span></td><td><span class="id">ACC-1042</span></td></tr></tbody>
+            </table>
+          </aside>
+        </article>
+        <p class="exhibit-note">A synthetic example: hypothesis <span class="id">H2</span> from the demo case.</p>
+      </div>
+    </section>
+
+    <section class="section limits" id="limits" aria-labelledby="limits-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="limits-title">Limits</h2>
+          <p class="section-lede">The agent proposes; the analyst decides.</p>
+        </div>
+        <dl class="terms">
+          <div class="term"><dt>The analyst decides</dt><dd>Accept or reject each hypothesis, and revisit it later.</dd></div>
+          <div class="term"><dt>What the agent never does</dt><dd>Judge clients, file reports, close alerts or change data.</dd></div>
+          <div class="term"><dt>Demo data</dt><dd>Generated accounts and transfers, no personal data.</dd></div>
+          <div class="term"><dt>Bank data</dt><dd>How it will be handled is not decided yet.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="band" aria-labelledby="band-title">
+      <div class="container band-row">
+        <div class="band-text">
+          <h2 id="band-title">Work through the demo alert</h2>
+          <p>The graph, the agent run and footnoted hypotheses, no sign-up.</p>
+        </div>
+        <a class="btn-primary" href="investigate.html?lang=en">Start investigation</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <p>Redstring is a working name.</p>
+      <nav class="lang" aria-label="Language">
+        <a href="index.html" hreflang="ru" lang="ru">RU</a>
+        <a href="en.html" hreflang="en" lang="en" aria-current="page">EN</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="landing.js"></script>
+</body>
+</html>
