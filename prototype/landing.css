@@ -236,11 +236,50 @@ b, strong { font-weight: var(--weight-strong); }
 .term dt { font-size: var(--text-lg); font-weight: var(--weight-strong); line-height: var(--leading-tight); }
 .term dd { color: var(--text-secondary); line-height: var(--leading-body); }
 
-/* Closing band: a change of paper, the one action again */
-.band { padding-block: var(--space-8); background: var(--surface); color: var(--text); border-top: 1px solid var(--rule); }
-.band-row { display: flex; justify-content: space-between; align-items: center; gap: var(--space-5); flex-wrap: wrap; }
-.band h2 { font-size: var(--text-2xl); }
-.band p { margin-top: var(--space-2); color: var(--text-secondary); font-size: var(--text-lg); }
+/* Closing band: the page ends the way a ledger does. The headline arrives word by word, the action
+   follows, and a double rule closes the account. The 1903 ledger returns at the foot. */
+.band {
+  position: relative; isolation: isolate; overflow: clip;
+  padding-block: var(--space-9) calc(var(--space-9) + var(--space-8));
+  background: var(--surface); color: var(--text);
+  border-top: 1px solid var(--rule);
+  text-align: center;
+}
+.band-photo { position: absolute; inset: 0; z-index: -1; }
+.band-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: 12% 90%;
+  filter: grayscale(1) invert(1) contrast(1.2);
+  opacity: 0.3;
+}
+.band-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, var(--surface) 55%, transparent 100%); }
+.band-inner { display: grid; justify-items: center; gap: var(--space-4); }
+.band h2 { max-width: 16ch; font-size: var(--text-3xl); letter-spacing: -0.01em; }
+.band-lede { color: var(--text-secondary); font-size: var(--text-lg); line-height: var(--leading-body); }
+.band .btn-primary { margin-top: var(--space-3); }
+.band-meta { color: var(--text-secondary); font-size: var(--text-sm); }
+.closing-rule { display: block; width: min(100%, 24rem); margin-top: var(--space-5); border-top: 3px double var(--rule-closing); }
+
+/* Shown at once without the script; with it, the block plays once when it scrolls into view. */
+.js .band .word { display: inline-block; }
+.js .band .word,
+.js .band .band-lede, .js .band .btn-primary, .js .band .band-meta {
+  opacity: 0; transform: translateY(14px);
+  transition: opacity var(--landing-enter) var(--ease-sharp), transform var(--landing-enter) var(--ease-sharp), color var(--duration-standard) var(--ease-sharp);
+}
+.js .band .word { transition-delay: calc(var(--w, 0) * 90ms); }
+.js .band .band-lede { transition-delay: 480ms; }
+.js .band .btn-primary { transition-delay: 620ms; }
+.js .band .band-meta { transition-delay: 760ms; }
+.js .band .closing-rule { transform: scaleX(0); transition: transform 600ms var(--ease-sharp) 900ms; }
+.js .band .band-photo img { opacity: 0; transition: opacity 1400ms var(--ease-sharp) 300ms; }
+.js .band.is-in .word,
+.js .band.is-in .band-lede, .js .band.is-in .btn-primary, .js .band.is-in .band-meta { opacity: 1; transform: none; }
+.js .band.is-in .btn-primary:active { transform: translateY(1px) scale(0.98); }
+.js .band.is-in .closing-rule { transform: none; }
+.js .band.is-in .band-photo img { opacity: 0.3; }
+/* Once the block has played, the button answers the pointer without the entrance delay. */
+.js .band.is-done .btn-primary { transition: color var(--duration-standard) var(--ease-sharp), transform var(--duration-micro) var(--ease-sharp); }
 
 .footer { padding-block: var(--space-8) var(--space-5); border-top: 1px solid var(--rule); color: var(--text-secondary); font-size: var(--text-sm); }
 .footer-row { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-4); flex-wrap: wrap; }
@@ -251,6 +290,8 @@ b, strong { font-weight: var(--weight-strong); }
   .hero-photo img, .hero h1, .lede, .hero-action, .statement, .statement-table tbody tr, .statement-table tfoot tr,
   .amt-lo::before, .notes, .statement figcaption, .hero .btn-primary { animation: none; }
   .js .run .calls li { opacity: 1; transform: none; transition: none; }
+  .js .band .word, .js .band .band-lede, .js .band .btn-primary, .js .band .band-meta, .js .band .closing-rule { opacity: 1; transform: none; transition: none; }
+  .js .band .band-photo img { opacity: 0.3; transition: none; }
   .btn-primary::before, .nav-links a::after { transition: none; }
 }
 

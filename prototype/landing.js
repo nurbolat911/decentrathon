@@ -26,6 +26,32 @@
     seen.observe(run);
   }
 
+  // Closing block: split the headline into words and play the block once when it is seen.
+  const band = document.querySelector(".band");
+  const bandHead = band && band.querySelector("h2");
+  if (bandHead && "IntersectionObserver" in window) {
+    const words = bandHead.textContent.trim().split(/\s+/);
+    bandHead.textContent = "";
+    words.forEach((w, i) => {
+      const span = document.createElement("span");
+      span.className = "word";
+      span.style.setProperty("--w", i);
+      span.textContent = w;
+      bandHead.append(span, i < words.length - 1 ? " " : "");
+    });
+    root.classList.add("js");
+    const closing = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        band.classList.add("is-in");
+        setTimeout(() => band.classList.add("is-done"), 1600);
+        closing.disconnect();
+      },
+      { threshold: 0.4 }
+    );
+    closing.observe(band);
+  }
+
   document.querySelectorAll(".lang a[hreflang]").forEach((a) => {
     a.addEventListener("click", () => {
       if (a.getAttribute("aria-current")) return;
