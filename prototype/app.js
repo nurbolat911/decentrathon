@@ -425,9 +425,13 @@
       ring = src.id;
       txs = m.txs.filter((x) => x.from === src.id || x.to === src.id).map((x) => x.id);
     } else if (src.kind === "step") {
-      const focus = C.steps[src.id].focus || [];
+      // A step lights what it returned: its accounts, the whole neighbourhood, or every cited transfer.
+      const st = C.steps[src.id];
+      const focus = st.focus || [];
       accs.push(...focus);
-      txs = m.txs.filter((x) => focus.includes(x.from) || focus.includes(x.to)).map((x) => x.id);
+      if (focus.length) txs = m.txs.filter((x) => focus.includes(x.from) || focus.includes(x.to)).map((x) => x.id);
+      else if (st.reveal === "all") txs = m.txs.map((x) => x.id);
+      else txs = m.hyps.flatMap((h) => h.footnotes.flat());
     }
     for (const id of txs) accs.push(TX[id].from, TX[id].to);
     if (!txs.length && !accs.length) return null;
@@ -725,6 +729,15 @@
     drawGraph();
   }
 
+  // Real label widths, so a label sits right at its edge; the estimate covers the time before fonts load.
+  const ruler = document.createElement("canvas").getContext("2d");
+  function textWidth(text, isId) {
+    if (!ruler) return text.length * (isId ? 7.8 : 6.6);
+    const cs = getComputedStyle(document.documentElement);
+    ruler.font = `13px ${cs.getPropertyValue(isId ? "--font-id" : "--font-sans")}`;
+    return ruler.measureText(text).width;
+  }
+
   function drawGraph() {
     const m = lastModel;
     if (!m) return;
@@ -738,13 +751,15 @@
       if (!pairs.has(key)) pairs.set(key, { from: x.from, to: x.to, txs: [] });
       pairs.get(key).txs.push(x);
     }
-    // Edge labels keep clear of nodes, node labels and each other.
+    // Edge labels keep clear of nodes, node labels, other selected edges and each other.
     const boxes = [];
     for (const [id, g] of Object.entries(geo)) {
-      boxes.push({ x: g.cx - g.r - 2, y: g.cy - g.r - 2, w: 2 * g.r + 4, h: 2 * g.r + 4 });
+      boxes.push({ x: g.cx - g.r - 2, y: g.cy - g.r - 2, w: 2 * g.r + 4, h: 2 * g.r + 4, cost: 3 });
       const lw = ACC[id].alert ? 46 : 40;
-      boxes.push({ x: g.cx - lw / 2, y: g.cy + g.r + 2, w: lw, h: ACC[id].alert ? 36 : 20 });
+      boxes.push({ x: g.cx - lw / 2, y: g.cy + g.r + 2, w: lw, h: ACC[id].alert ? 36 : 20, cost: 3 });
     }
+    const hotSegs = [];
+    const wanted = [];
     let back = "";
     let front = "";
     let labels = "";
@@ -774,30 +789,60 @@
       const hw = al * 0.45;
       const cls = `g-e${hot ? " is-hot" : ""}${dim ? " is-dim" : ""}${inHyp ? "" : " is-context"}`;
       const dash = inHyp ? "" : ' stroke-dasharray="5 4"';
-      const markup = `<g class="${cls}"><line x1="${f(sx)}" y1="${f(sy)}" x2="${f(bx)}" y2="${f(by)}" stroke-width="${w}"${dash}/><polygon points="${f(tx)},${f(ty)} ${f(bx - uy * hw)},${f(by + ux * hw)} ${f(bx + uy * hw)},${f(by - ux * hw)}"/></g>`;
+      const markup = `<g class="${cls}" data-edge="${p.from}>${p.to}"><line x1="${f(sx)}" y1="${f(sy)}" x2="${f(bx)}" y2="${f(by)}" stroke-width="${w}"${dash}/><polygon points="${f(tx)},${f(ty)} ${f(bx - uy * hw)},${f(by + ux * hw)} ${f(bx + uy * hw)},${f(by - ux * hw)}"/></g>`;
       if (hot) front += markup;
       else back += markup;
 
+      const key = p.from + ">" + p.to;
+      hotSegs.push({ key, hot, sx, sy, ex: tx, ey: ty });
       if (hot && hl.labels) {
         const lines = hotTx.length === 1 ? [hotTx[0].id, money(hotTx[0].amount)] : ["×" + hotTx.length, money(hotTx.reduce((s, x) => s + x.amount, 0))];
         if (rejected) lines.push(t("rejectedEdge"));
-        const bw = Math.max(...lines.map((l) => l.length)) * 7.4 + 12;
-        const bh = lines.length * 17 + 6;
-        const side = Math.abs(uy) * (bw / 2) + Math.abs(ux) * (bh / 2) + 6;
-        const spots = [];
-        for (const at of [0.5, 0.4, 0.6, 0.3, 0.7]) for (const off of [0, side, -side]) spots.push([at, off]);
-        for (const [at, off] of spots) {
-          const lx = sx + (bx - sx) * at - uy * off;
-          const ly = sy + (by - sy) * at + ux * off;
+        wanted.push({ key, lines, sx, sy, ex: bx, ey: by, ux, uy, len: Math.hypot(bx - sx, by - sy) });
+      }
+    }
+
+    // Each label goes on its own edge where there is room and right beside it where there is not.
+    // A label is never dropped: with no free spot it takes the least crowded one.
+    const hits = (b, o) => b.x < o.x + o.w && o.x < b.x + b.w && b.y < o.y + o.h && o.y < b.y + b.h;
+    const crosses = (b, g) => {
+      const n = Math.max(2, Math.ceil(Math.hypot(g.ex - g.sx, g.ey - g.sy) / 5));
+      for (let i = 0; i <= n; i++) {
+        const x = g.sx + ((g.ex - g.sx) * i) / n;
+        const y = g.sy + ((g.ey - g.sy) * i) / n;
+        if (x > b.x && x < b.x + b.w && y > b.y && y < b.y + b.h) return true;
+      }
+      return false;
+    };
+    const cw = canvas.clientWidth;
+    const ch = canvas.clientHeight;
+    // Labels lean away from the middle of the selected edges, so the inside of a loop stays clear.
+    const mid = wanted.reduce((c, L) => ({ x: c.x + (L.sx + L.ex) / 2 / wanted.length, y: c.y + (L.sy + L.ey) / 2 / wanted.length }), { x: 0, y: 0 });
+    wanted.sort((a, b) => a.len - b.len);
+    for (const L of wanted) {
+      const bw = Math.max(...L.lines.map((l, i) => textWidth(l, i === 0 && l.startsWith("T-")))) + 8;
+      const bh = L.lines.length * 17;
+      const side = Math.abs(L.uy) * (bw / 2) + Math.abs(L.ux) * (bh / 2) + 4;
+      const covers = Math.abs(L.ux) * bw + Math.abs(L.uy) * bh > 0.85 * L.len;
+      const out = ((L.sx + L.ex) / 2 - mid.x) * -L.uy + ((L.sy + L.ey) / 2 - mid.y) * L.ux >= 0 ? side : -side;
+      let best = null;
+      search: for (const off of [0, out, -out]) {
+        for (const at of [0.5, 0.42, 0.58, 0.34, 0.66, 0.26, 0.74, 0.2, 0.8]) {
+          const lx = L.sx + (L.ex - L.sx) * at - L.uy * off;
+          const ly = L.sy + (L.ey - L.sy) * at + L.ux * off;
           const box = { x: lx - bw / 2, y: ly - bh / 2, w: bw, h: bh };
-          if (boxes.some((o) => box.x < o.x + o.w && o.x < box.x + box.w && box.y < o.y + o.h && o.y < box.y + box.h)) continue;
-          boxes.push(box);
-          const first = lines[0].startsWith("T-") ? `<span class="id">${esc(lines[0])}</span>` : `<span class="num">${esc(lines[0])}</span>`;
-          const rest = lines.slice(1).map((l, i) => `<span class="${i === 0 ? "num" : "edge-flag"}">${esc(l)}</span>`).join("");
-          labels += `<span class="g-edge-label" style="left:${f(lx)}px;top:${f(ly)}px">${first}${rest}</span>`;
-          break;
+          let cost = off === 0 ? (covers ? 1 : 0) : off === out ? 0.5 : 1.5;
+          for (const o of boxes) if (hits(box, o)) cost += o.cost;
+          for (const g of hotSegs) if (g.key !== L.key && crosses(box, g)) cost += g.hot ? 2 : 1;
+          if (box.x < 0 || box.y < 0 || box.x + bw > cw || box.y + bh > ch) cost += 5;
+          if (!best || cost < best.cost) best = { cost, lx, ly, box };
+          if (cost === 0) break search;
         }
       }
+      boxes.push({ ...best.box, cost: 4 });
+      const first = L.lines[0].startsWith("T-") ? `<span class="id">${esc(L.lines[0])}</span>` : `<span class="num">${esc(L.lines[0])}</span>`;
+      const rest = L.lines.slice(1).map((l, i) => `<span class="${i === 0 ? "num" : "edge-flag"}">${esc(l)}</span>`).join("");
+      labels += `<span class="g-edge-label" data-edge="${L.key}" style="left:${f(best.lx)}px;top:${f(best.ly)}px">${first}${rest}</span>`;
     }
 
     let nodes = "";
@@ -922,6 +967,7 @@
     } else return;
     e.preventDefault();
   });
+  if (document.fonts) document.fonts.ready.then(() => lastModel && drawGraph());
   new ResizeObserver(() => {
     if (!lastModel) return;
     if (!view.manual) fit(lastModel);
@@ -945,7 +991,7 @@
     const item = (sw, text) => `<li>${swatch(sw)}<span>${esc(text)}</span></li>`;
     $("legend").innerHTML = `
       <div class="legend-group"><p class="legend-h">${esc(t("roleH"))}</p><ul>${roles.map(([s, z, txt]) => item(node(s, z), txt)).join("")}</ul></div>
-      <div class="legend-group"><p class="legend-h">${esc(t("riskH"))}</p><ul>${item(highNode, L().risks.high)}${item(medNode, L().risks.medium)}${item(lowNode, L().risks.lowOrNone)}</ul></div>
+      <div class="legend-group"><p class="legend-h">${esc(t("riskH"))}</p><ul>${m.any ? item(highNode, L().risks.high) + item(medNode, L().risks.medium) + item(lowNode, L().risks.lowOrNone) : item(lowNode, L().risks.unrated)}</ul></div>
       <div class="legend-group"><p class="legend-h">${esc(t("edgeH"))}</p><ul>${item(edge(1), t("edgeThin", { a: money(C.threshold) }))}${item(edge(2), t("edgeMid", { a: money(C.threshold), b: money(5 * C.threshold) }))}${item(edge(4), t("edgeThick", { b: money(5 * C.threshold) }))}</ul><p class="legend-note">${esc(t("edgeNote"))}</p></div>
       <div class="legend-group"><p class="legend-h">${esc(t("lineH"))}</p><ul>${item(edge(1.5), t("lineSolid"))}${item(edge(1.5, true), t("lineDashed"))}</ul><p class="legend-note">${esc(m.any ? t("axisRoles") : t("axisDirection"))}</p></div>`;
   }
@@ -1077,7 +1123,7 @@
           <button type="button" class="hyp-title" data-select-hyp="${h.id}" aria-expanded="${!!open}"><span class="id">${h.id}</span><span>${esc(tr(h.typology))}</span></button>
           ${riskLabel(h.risk)}
         </div>
-        <p class="hyp-basis"><span class="muted">${esc(t("basis"))}:</span> <strong>${esc(basisWord(met, h.signs.length))}</strong>, ${esc(t("basisCount", { m: met, n: h.signs.length, signs: plural(h.signs.length, "signs") }))}${d === "rejected" ? `<span class="flag">${icon("i-ban")}${esc(t("decisionRejected"))}</span>` : ""}</p>
+        <p class="hyp-basis"><span class="muted">${esc(t("basis"))}:</span> <strong>${esc(basisWord(met, h.signs.length))}</strong>, ${esc(t("basisCount", { m: met, n: h.signs.length, signs: plural(h.signs.length, "signs") }))}</p>
         <p class="hyp-claim">${rich(tr(h.claim), "hyp", h.id)}</p>
         ${open ? fnTable("hyp", h.id, h.footnotes, t("fnCaption", { id: h.id })) + signs : ""}
         <p class="hyp-check"><span class="muted">${esc(t("check"))}:</span> ${rich(tr(h.check), "hyp", h.id)}</p>
@@ -1143,6 +1189,8 @@
     const rank = m.apex ? C.apex.candidates.findIndex((c) => c.account === id) : -1;
     const role = roleOf(id, m);
     const pair = (k, v) => `<div class="pair"><dt>${esc(t(k))}</dt><dd>${v}</dd></div>`;
+    const at = nodeGeometry(m)[id];
+    box.classList.toggle("is-left", !!at && at.cx > canvas.clientWidth / 2);
     box.hidden = false;
     box.innerHTML = `
       <div class="panel-head">
@@ -1169,6 +1217,12 @@
     state.peek = null;
     if (state.panel && (!state.sel || state.sel.kind !== "acc" || state.sel.id !== state.panel)) state.panel = null;
     renderAll();
+  }
+
+  // The step that produced a hypothesis selects that hypothesis.
+  function selectStep(i) {
+    const h = C.steps[i].hypothesis;
+    select(h ? { kind: "hyp", id: h } : { kind: "step", id: i });
   }
 
   function clearAll() {
@@ -1200,7 +1254,7 @@
     const row = e.target.closest("tr[data-row]");
     if (!el && row) return select({ kind: "tx", id: row.dataset.row });
     const stepRow = e.target.closest("[data-step-row]");
-    if (!el && stepRow) return select({ kind: "step", id: Number(stepRow.dataset.stepRow) });
+    if (!el && stepRow) return selectStep(Number(stepRow.dataset.stepRow));
     if (!el) {
       const hyp = e.target.closest(".hyp");
       if (hyp && !(state.sel && state.sel.kind === "hyp" && state.sel.id === hyp.dataset.hyp)) select({ kind: "hyp", id: hyp.dataset.hyp });
@@ -1237,7 +1291,7 @@
       save();
       return renderAll();
     }
-    if (d.step !== undefined) return select({ kind: "step", id: Number(d.step) });
+    if (d.step !== undefined) return selectStep(Number(d.step));
     if (d.tx) return select({ kind: "tx", id: d.tx });
     if (d.acc) return openAccount(d.acc, el);
     if (d.sort) {

@@ -1,12 +1,30 @@
-// Landing: keep the reader's place when switching RU and EN, and remember the language for the demo.
-// The page works in full without this script; the language links are plain links.
+// Landing: replays the agent run when "How it works" scrolls into view, keeps the reader's place
+// when switching RU and EN, and remembers the language for the demo.
+// The page reads in full without this script: the run log is hidden only once the script is running.
 (function () {
   "use strict";
   const KEY = "redstring.landing.place";
+  const root = document.documentElement;
 
   try {
-    localStorage.setItem("redstring.lang", document.documentElement.lang);
+    localStorage.setItem("redstring.lang", root.lang);
   } catch (_) {}
+
+  // Agent run: number the calls in order, then show them one by one the first time the block is seen.
+  const run = document.querySelector(".run");
+  if (run && "IntersectionObserver" in window) {
+    run.querySelectorAll(".calls li").forEach((li, i) => li.style.setProperty("--i", i));
+    root.classList.add("js");
+    const seen = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        run.classList.add("is-in");
+        seen.disconnect();
+      },
+      { threshold: 0.35 }
+    );
+    seen.observe(run);
+  }
 
   document.querySelectorAll(".lang a[hreflang]").forEach((a) => {
     a.addEventListener("click", () => {

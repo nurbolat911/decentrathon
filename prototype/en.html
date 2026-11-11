@@ -6,6 +6,7 @@
   <title>Redstring, an assistant for AML analysts</title>
   <meta name="description" content="Redstring maps the transfers, finds laundering schemes with algorithms and puts the transactions under every finding. The demo runs on synthetic data." />
   <link rel="alternate" hreflang="ru" href="index.html" />
+  <link rel="icon" href="data:," />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500&amp;family=Source+Sans+3:wght@400;600&amp;display=swap" rel="stylesheet" />
@@ -36,6 +37,9 @@
 
   <main id="main">
     <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-photo" aria-hidden="true">
+        <img src="assets/ledger-1903.jpg" alt="" width="1920" height="1315" fetchpriority="high" />
+      </div>
       <div class="container hero-grid">
         <div class="hero-text">
           <h1 id="hero-title">Tracing one alert by hand takes hours</h1>
@@ -57,12 +61,12 @@
               <tr><td class="num">11:17</td><td><span class="id">T-0003</span></td><td><span class="id">ACC-2102</span></td><td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi"></span><span class="amt-lo">975,000</span></span><span class="visually-hidden">975,000</span></td></tr>
               <tr><td class="num">15:41</td><td><span class="id">T-0002</span></td><td><span class="id">ACC-2101</span></td><td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi"></span><span class="amt-lo">960,000</span></span><span class="visually-hidden">960,000</span></td></tr>
               <tr><td class="num">18:30</td><td><span class="id">T-0012</span></td><td><span class="id">ACC-2106</span></td><td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi"></span><span class="amt-lo">975,000</span></span><span class="visually-hidden">975,000</span></td></tr>
-              <tr class="is-out"><td class="num">21:05</td><td><span class="id">T-0013</span></td><td><span class="id">ACC-1042</span></td><td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi">−3,</span><span class="amt-lo">780,000</span></span><span class="visually-hidden">minus 3,780,000</span></td></tr>
+              <tr class="is-out"><td class="num">21:05</td><td><span class="id">T-0013</span></td><td><span class="id">ACC-1042</span></td><td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi">−3</span><span class="amt-lo">780,000</span></span><span class="visually-hidden">minus 3,780,000</span></td></tr>
             </tbody>
             <tfoot>
               <tr class="threshold-row">
                 <th scope="row" colspan="3">Rule R-12 threshold<sup><a class="fn-mark" id="hero-ref-1" href="#hero-fn-1" aria-label="Footnote 1">1</a></sup></th>
-                <td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi">1,</span><span class="amt-lo">000,000</span></span><span class="visually-hidden">1,000,000</span></td>
+                <td class="amt"><span class="amt-cell" aria-hidden="true"><span class="amt-hi">1</span><span class="amt-lo">000,000</span></span><span class="visually-hidden">1,000,000</span></td>
               </tr>
             </tfoot>
           </table>
@@ -146,7 +150,6 @@
       <div class="container">
         <div class="section-head">
           <h2 id="limits-title">Limits</h2>
-          <p class="section-lede">The agent proposes; the analyst decides.</p>
         </div>
         <dl class="terms">
           <div class="term"><dt>The analyst decides</dt><dd>Accept or reject each hypothesis, and revisit it later.</dd></div>
@@ -161,7 +164,7 @@
       <div class="container band-row">
         <div class="band-text">
           <h2 id="band-title">Work through the demo alert</h2>
-          <p>The graph, the agent run and footnoted hypotheses, no sign-up.</p>
+          <p>The graph, the agent run and footnoted hypotheses.</p>
         </div>
         <a class="btn-primary" href="investigate.html?lang=en">Start investigation</a>
       </div>
@@ -170,7 +173,10 @@
 
   <footer class="footer">
     <div class="container footer-row">
-      <p>Redstring is a working name.</p>
+      <div class="footer-text">
+        <p>Redstring is a working name.</p>
+        <p>First-screen backdrop: a teller’s ledger page from the textbook “Modern Banking Methods”, 1903. <a href="https://commons.wikimedia.org/wiki/File:Modern_banking_methods_and_practical_bank_bookkeeping;_illustrated_with_over_two_hundred_forms_of_bank_books,_records_and_blanks_(1903)_(14597619308).jpg">Internet Archive Book Images, Wikimedia Commons</a>, no known copyright restrictions.</p>
+      </div>
       <nav class="lang" aria-label="Language">
         <a href="index.html" hreflang="ru" lang="ru">RU</a>
         <a href="en.html" hreflang="en" lang="en" aria-current="page">EN</a>

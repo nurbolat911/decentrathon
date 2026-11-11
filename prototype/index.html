@@ -6,6 +6,7 @@
   <title>Redstring, помощник AML-аналитика</title>
   <meta name="description" content="Redstring строит граф переводов, ищет схемы отмывания алгоритмами и под каждым выводом показывает переводы. Демо на синтетических данных." />
   <link rel="alternate" hreflang="en" href="en.html" />
+  <link rel="icon" href="data:," />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500&amp;family=Source+Sans+3:wght@400;600&amp;display=swap" rel="stylesheet" />
@@ -36,6 +37,9 @@
 
   <main id="main">
     <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-photo" aria-hidden="true">
+        <img src="assets/ledger-1903.jpg" alt="" width="1920" height="1315" fetchpriority="high" />
+      </div>
       <div class="container hero-grid">
         <div class="hero-text">
           <h1 id="hero-title">Ручной разбор одного алерта занимает часы</h1>
@@ -146,7 +150,6 @@
       <div class="container">
         <div class="section-head">
           <h2 id="limits-title">Границы</h2>
-          <p class="section-lede">Агент предлагает гипотезы, решение принимает аналитик.</p>
         </div>
         <dl class="terms">
           <div class="term"><dt>Решение за аналитиком</dt><dd>Аналитик принимает или отклоняет каждую гипотезу и может пересмотреть решение.</dd></div>
@@ -161,7 +164,7 @@
       <div class="container band-row">
         <div class="band-text">
           <h2 id="band-title">Разберите демо-алерт сами</h2>
-          <p>Граф, ход агента и гипотезы со сносками, без регистрации.</p>
+          <p>Граф, ход агента и гипотезы со сносками.</p>
         </div>
         <a class="btn-primary" href="investigate.html?lang=ru">Начать расследование</a>
       </div>
@@ -170,7 +173,10 @@
 
   <footer class="footer">
     <div class="container footer-row">
-      <p>Redstring, рабочее название.</p>
+      <div class="footer-text">
+        <p>Redstring, рабочее название.</p>
+        <p>Фон первого экрана: лист кассовой книги из учебника «Modern Banking Methods», 1903. <a href="https://commons.wikimedia.org/wiki/File:Modern_banking_methods_and_practical_bank_bookkeeping;_illustrated_with_over_two_hundred_forms_of_bank_books,_records_and_blanks_(1903)_(14597619308).jpg">Internet Archive Book Images, Wikimedia Commons</a>, без известных ограничений авторского права.</p>
+      </div>
       <nav class="lang" aria-label="Язык">
         <a href="index.html" hreflang="ru" lang="ru" aria-current="page">RU</a>
         <a href="en.html" hreflang="en" lang="en">EN</a>
