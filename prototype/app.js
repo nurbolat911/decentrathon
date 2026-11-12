@@ -86,8 +86,12 @@
       apexPending: "Рейтинг появится после шага rank_apex.",
       apexStopped: "Рейтинг не построен: разбор остановлен до шага rank_apex.",
       shareLabel: "Доля потока",
+      keptLabel: "Осталось на счёте",
+      panHint: "Граф шире экрана: двигайте его пальцем или мышью, масштаб кнопками выше. Те же переводы в таблице ниже.",
+      showOnGraph: "Показать на графе",
+      tableHint: "Таблица шире экрана, листайте её вбок.",
       rankLabel: "Место {n}",
-      apexNote: "Доля потока: часть денег из подозрительного подграфа, которая пришла на счёт; знаменатель общий для трёх счетов. Порядок задаёт rank_apex, он учитывает и то, уходят ли деньги дальше, поэтому полоса ниже по списку может быть длиннее.",
+      apexNote: "Доля потока: часть денег из подозрительного подграфа, пришедшая на счёт, знаменатель общий для трёх счетов. Порядок идёт по тому, сколько денег на счёте осталось: вершина схемы там, где они оседают.",
       hypsH: "Гипотезы",
       hypsEmpty: "Гипотезы появятся по ходу разбора.",
       basis: "Основание",
@@ -207,8 +211,12 @@
       apexPending: "The ranking appears after the rank_apex step.",
       apexStopped: "No ranking: the run stopped before the rank_apex step.",
       shareLabel: "Flow share",
+      keptLabel: "Kept on the account",
+      panHint: "The graph is wider than the screen: drag it, zoom with the buttons above. The table below holds the same transfers.",
+      showOnGraph: "Show on the graph",
+      tableHint: "The table is wider than the screen; scroll it sideways.",
       rankLabel: "Rank {n}",
-      apexNote: "Flow share: the part of the money from the suspicious subgraph that reached the account, over one denominator for all three. rank_apex sets the order and also weighs whether the money moves on, so a lower row can have a longer bar.",
+      apexNote: "Flow share: the part of the money from the suspicious subgraph that reached the account, over one denominator for all three. The order follows how much of the money stays: the apex is where it settles.",
       hypsH: "Hypotheses",
       hypsEmpty: "Hypotheses appear as the run goes.",
       basis: "Basis",
@@ -668,11 +676,42 @@
     const maxX = Math.max(...xs) + 24;
     const minY = Math.min(...ys) - 24;
     const maxY = Math.max(...ys) + 44;
-    let k = Math.min((W - 2 * pad) / (maxX - minX), (H - 2 * pad) / (maxY - minY));
-    k = Math.max(ZMIN, Math.min(k, 1.25, ZMAX));
+    const want = Math.min((W - 2 * pad) / (maxX - minX), (H - 2 * pad) / (maxY - minY));
+    const k = Math.max(ZMIN, Math.min(want, 1.25, ZMAX));
     view.k = k;
     view.x = W / 2 - (k * (minX + maxX)) / 2;
     view.y = H / 2 - (k * (minY + maxY)) / 2;
+    // The minimum zoom is a legibility floor, so a narrow canvas pans instead of shrinking the graph.
+    // Then the view starts on what matters: the current selection, or the alert subject.
+    view.overflow = want < ZMIN;
+    if (view.overflow) {
+      const hl = highlight(m);
+      const focus = hl ? [...hl.accs].filter((id) => ids.includes(id)) : [];
+      centreOn(focus.length ? focus : [C.alert.subject], W, H);
+    }
+  }
+
+  function centreOn(ids, W = canvas.clientWidth, H = canvas.clientHeight) {
+    const xs = ids.map((id) => ACC[id].x);
+    const ys = ids.map((id) => ACC[id].y);
+    const cx = (Math.min(...xs) + Math.max(...xs)) / 2;
+    const cy = (Math.min(...ys) + Math.max(...ys)) / 2;
+    view.x = W / 2 - view.k * cx;
+    if ((Math.max(...ys) - Math.min(...ys) + 68) * view.k > H) view.y = H / 2 - view.k * cy;
+  }
+
+  // Narrow screens: the graph sits far above the hypotheses, so the selected one offers a jump to it.
+  function showOnGraph() {
+    const m = lastModel;
+    const hl = m && highlight(m);
+    if (hl) {
+      centreOn([...hl.accs].filter((id) => m.accounts.includes(id)));
+      view.manual = true;
+      drawGraph();
+    }
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    $("graph").scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
+    $("graph").focus({ preventScroll: true });
   }
 
   // Polygons in screen space; s is the node size in pixels at the current zoom.
@@ -726,6 +765,9 @@
       view.manual = false;
     }
     if (!view.manual) fit(m);
+    $("graph-pan").hidden = !view.overflow || !m.accounts.length;
+    $("graph-pan").textContent = t("panHint");
+    $("table-hint").textContent = t("tableHint");
     drawGraph();
   }
 
@@ -971,6 +1013,7 @@
   new ResizeObserver(() => {
     if (!lastModel) return;
     if (!view.manual) fit(lastModel);
+    $("graph-pan").hidden = !view.overflow || !lastModel.accounts.length;
     drawGraph();
   }).observe(canvas);
 
@@ -1077,6 +1120,10 @@
       .map((c, i) => {
         const on = s && ((s.kind === "apex" && s.id === c.account) || (s.kind === "acc" && s.id === c.account));
         const share = c.inflow / total;
+        // Kept: everything the account received minus everything it sent on, from the same transfers the panel counts.
+        const got = m.txs.filter((x) => x.to === c.account).reduce((a, x) => a + x.amount, 0);
+        const sent = m.txs.filter((x) => x.from === c.account).reduce((a, x) => a + x.amount, 0);
+        const kept = got ? Math.max(0, got - sent) / got : 0;
         const open = s && s.kind === "apex" && s.id === c.account;
         return `<li class="apex-row${i === 0 ? " is-leader" : ""}${on ? " is-selected" : ""}">
           <span class="apex-rank num" aria-label="${esc(t("rankLabel", { n: i + 1 }))}">${i + 1}</span>
@@ -1085,11 +1132,15 @@
               <button type="button" class="link-id" data-apex="${c.account}" aria-expanded="${!!open}">${c.account}</button>
               ${riskLabel(m.risk[c.account])}
             </div>
-            <div class="share">
-              <span class="share-label">${esc(t("shareLabel"))}</span>
-              <span class="share-val num">${pct(share)}</span>
-              <span class="share-bar" aria-hidden="true"><span style="inline-size:${(share * 100).toFixed(1)}%"></span></span>
-            </div>
+            <dl class="share">
+              <dt class="share-label">${esc(t("shareLabel"))}</dt>
+              <dd class="share-val num">${pct(share)}</dd>
+              <dd class="share-bar" aria-hidden="true"><span style="inline-size:${(share * 100).toFixed(1)}%"></span></dd>
+              <dt class="share-label">${esc(t("keptLabel"))}</dt>
+              <dd class="share-val num">${pct(kept)}</dd>
+              <dd class="share-bar is-kept" aria-hidden="true"><span style="inline-size:${(kept * 100).toFixed(1)}%"></span></dd>
+              <dd class="share-sum num">${money(Math.max(0, got - sent))}</dd>
+            </dl>
             <p class="apex-reason">${rich(tr(c.reason), "apex", c.account)}</p>
             ${open ? fnTable("apex", c.account, c.footnotes, t("fnCaptionApex", { id: c.account })) : ""}
           </div>
@@ -1125,6 +1176,7 @@
         </div>
         <p class="hyp-basis"><span class="muted">${esc(t("basis"))}:</span> <strong>${esc(basisWord(met, h.signs.length))}</strong>, ${esc(t("basisCount", { m: met, n: h.signs.length, signs: plural(h.signs.length, "signs") }))}</p>
         <p class="hyp-claim">${rich(tr(h.claim), "hyp", h.id)}</p>
+        ${open ? `<button type="button" class="btn show-on-graph" data-show-graph>${esc(t("showOnGraph"))}</button>` : ""}
         ${open ? fnTable("hyp", h.id, h.footnotes, t("fnCaption", { id: h.id })) + signs : ""}
         <p class="hyp-check"><span class="muted">${esc(t("check"))}:</span> ${rich(tr(h.check), "hyp", h.id)}</p>
         <div class="decide">
@@ -1299,6 +1351,7 @@
       return renderAll();
     }
     if (d.closePanel !== undefined) return closePanel();
+    if (d.showGraph !== undefined) return showOnGraph();
     if (d.action === "restart") return requestRestart();
   });
 

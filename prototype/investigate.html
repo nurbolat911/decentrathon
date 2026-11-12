@@ -6,8 +6,6 @@
   <title>Разбор алерта ALR-2026-0417, Redstring</title>
   <meta name="description" content="Демо-разбор алерта на синтетических данных: ход агента, граф переводов, вершина схемы и гипотезы со сносками на переводы." />
   <link rel="icon" href="data:," />
-  <link rel="preload" href="fonts/source-sans-3-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="app.css" />
 </head>
 <body>
@@ -94,11 +92,13 @@
             <p class="graph-empty" id="graph-empty" hidden></p>
           </div>
           <p class="visually-hidden" id="graph-hint"></p>
+          <p class="graph-pan" id="graph-pan" hidden></p>
           <div class="panel" id="panel" role="dialog" aria-labelledby="panel-title" hidden></div>
         </div>
         <div class="legend" id="legend"></div>
         <div class="transfers">
           <h2 class="col-h" id="h-transfers" data-i18n="transfersH">Переводы</h2>
+          <p class="table-hint" id="table-hint"></p>
           <div class="table-wrap">
             <table class="ledger" id="transfers" aria-labelledby="h-transfers"></table>
           </div>

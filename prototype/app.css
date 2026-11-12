@@ -196,6 +196,8 @@ button.step-tool:active { color: var(--accent-text); }
 .graph-canvas:focus-visible { outline-offset: -2px; }
 .graph-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .graph-labels { position: absolute; inset: 0; pointer-events: none; }
+.graph-pan { padding: var(--space-2) var(--space-4); border-top: 1px solid var(--rule); color: var(--text-secondary); font-size: var(--text-xs); line-height: var(--leading-body); }
+.table-hint, .show-on-graph { display: none; }
 .graph-empty { position: absolute; inset: 0; display: grid; place-items: center; padding: var(--space-4); color: var(--text-secondary); text-align: center; }
 
 .g-e line { stroke: var(--graph-edge); }
@@ -323,11 +325,14 @@ button.step-tool:active { color: var(--accent-text); }
 .apex-rank { padding-top: var(--space-1); color: var(--text-secondary); font-weight: var(--weight-strong); }
 .apex-body { display: grid; gap: var(--space-1); min-width: 0; }
 .apex-head { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); }
-.share { display: grid; grid-template-columns: auto 3rem minmax(0, 1fr); align-items: center; gap: var(--space-2); }
+.share { display: grid; grid-template-columns: 8.5rem 3rem minmax(0, 1fr); align-items: center; gap: var(--space-1) var(--space-2); margin: 0; }
+.share dd { margin: 0; }
+.share-sum { grid-column: 2 / -1; color: var(--text-secondary); font-size: var(--text-xs); }
 .share-label { color: var(--text-secondary); font-size: var(--text-xs); }
 .share-val { font-weight: var(--weight-strong); text-align: end; }
 .share-bar { display: block; height: var(--space-1); background: var(--rule); }
 .share-bar > span { display: block; height: 100%; background: var(--border-interactive); }
+.share-bar.is-kept > span { background: var(--text-secondary); }
 .apex-reason { line-height: var(--leading-body); }
 .note { margin-top: var(--space-3); color: var(--text-secondary); font-size: var(--text-xs); line-height: var(--leading-body); }
 
@@ -391,6 +396,8 @@ button.step-tool:active { color: var(--accent-text); }
   .col-left, .col-right { border-inline: 0; border-top: 1px solid var(--rule); }
   .table-wrap { overflow-x: auto; }
   .ledger thead { position: static; }
+  .table-hint { display: block; margin-bottom: var(--space-2); color: var(--text-secondary); font-size: var(--text-xs); }
+  .show-on-graph { display: inline-flex; justify-self: start; }
 }
 @media (max-width: 30rem) {
   .bar { padding-inline: var(--space-3); }
